@@ -16,15 +16,13 @@ export interface updatedLocation {
   description: string
 }
 
-export interface events{ 
-  name:string
-  description:string
-  location:string
-  time:string
-  events\
-  
-
-} 
+export interface events {
+  id: number
+  name: string
+  description: string
+  location: string
+  time: string
+}
 
 export async function getAllLocations() {
   // TODO: use knex to get the real location data from the database
@@ -57,6 +55,14 @@ export async function updateLocation(location: updatedLocation) {
   return await db('locations').where('id', location.id).update(location)
 }
 
-export async function addNewEvent(event:events){
-  return await db('events')
-  .insert()
+export async function addNewEvent(event: events) {
+  return await db('events').insert(event)
+}
+
+export async function deleteEvent(id: string) {
+  return await db('events').where('id', id).del()
+}
+
+export async function updateEvent(id: number, event: events) {
+  return await db('events').where('id', id).update(event)
+}

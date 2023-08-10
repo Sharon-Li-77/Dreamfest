@@ -2,7 +2,13 @@ import express from 'express'
 
 import { eventDays, capitalise, validateDay } from './helpers.ts'
 import * as db from '../db/index.ts'
-import { getAllLocations } from '../db/index.ts'
+import {
+  getAllLocations,
+  addNewEvent,
+  deleteEvent,
+  updateEvent,
+} from '../db/index.ts'
+import { configDefaults } from 'vitest/dist/config.js'
 const router = express.Router()
 export default router
 
@@ -30,7 +36,7 @@ router.get('/add/:day', async (req, res) => {
   // ]
 
   const viewData = { locations, days, day }
-  // console.log(viewData)
+
   res.render('addEvent', viewData)
 })
 
@@ -39,9 +45,11 @@ router.post('/add', (req, res) => {
   // ASSISTANCE: So you know what's being posted ;)
 
   const body = req.body
-  body.locataion_id = body.locationId
+  body.location_id = body.locationId
   delete body.locationId
-  body.locataion_id = parseInt(body.locataion_id)
+  body.location_id = parseInt(body.location_id)
+
+  addNewEvent(req.body)
   console.log('body', body)
   // const { name, description, time, locationId } = req.body
   const day = validateDay(req.body.day)
@@ -55,12 +63,19 @@ router.post('/add', (req, res) => {
 
 // POST /events/delete
 router.post('/delete', (req, res) => {
-  // const id = Number(req.body.id)
-  // const day = validateDay(req.body.day)
+  const id = req.body.id
+  const day = validateDay(req.body.day)
+
+  // console.log('delete', req.params)
+  // console.log('body', req.body)
+
+  deleteEvent(id)
+
+  console.log('delete', req.body)
 
   // TODO: Delete the event from the database using its id
 
-  const day = 'friday' // TODO: Remove this line
+  // const day = 'friday' // TODO: Remove this line
 
   res.redirect(`/schedule/${day}`)
 })
@@ -80,6 +95,8 @@ router.get('/:id/edit', (req, res) => {
     description:
       'This is totally a description of this really awesome event that will be taking place during this festival at the Yella Yurt. Be sure to not miss the free slushies cause they are rad!',
   }
+
+  console.log('update', req.body)
 
   // TODO: Replace locations below with all of the locations from the database
   // NOTE: The objects should have the same shape as these.
