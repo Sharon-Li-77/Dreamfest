@@ -63,6 +63,14 @@ export async function deleteEvent(id: string) {
   return await db('events').where('id', id).del()
 }
 
-export async function updateEvent(id: number, event: events) {
-  return await db('events').where('id', id).update(event)
+export async function updateEvent(id: number, updatedEvent: events) {
+  return await db('events').where('id', id).update(updatedEvent)
+}
+
+export async function getEventById(id: number) {
+  return await db('events').where('id', id).select()
+}
+
+export async function getAllLocationsIdName() {
+  return await db('locations').select('id', 'name')
 }
