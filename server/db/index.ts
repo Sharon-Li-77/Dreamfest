@@ -68,7 +68,7 @@ export async function updateEvent(id: number, updatedEvent: events) {
 }
 
 export async function getEventById(id: number) {
-  return await db('events').where('id', id).select()
+  return await db('events').where('id', id).select().first()
 }
 
 export async function getAllLocationsIdName() {
